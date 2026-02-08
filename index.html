@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catch the Blob!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -25,16 +28,18 @@
 
     .title {
       position: absolute;
-      top: 40px;
-      left: 40px;
+      top: 50px;
+      left: 50px;
       transform: none;
-      color: #5227FF;
-      font-size: 2rem;
+      color: #FFFFFF;
+      font-size: 2.5rem;
       font-weight: 400;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(82, 39, 255, 0.5);
+      letter-spacing: 3px;
+      text-shadow: none;
       z-index: 1;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Space Mono', 'Courier New', Courier, monospace;
+      opacity: 0.85;
+      text-transform: uppercase;
     }
 
     .blob-container {
@@ -56,15 +61,72 @@
       pointer-events: all;
       cursor: pointer;
       transition: transform 0.15s ease-out;
+      background: radial-gradient(circle at 50% 50%, 
+        rgba(120, 160, 255, 1) 0%,
+        rgba(115, 155, 252, 1) 4%,
+        rgba(110, 150, 248, 1) 8%,
+        rgba(105, 145, 244, 1) 12%,
+        rgba(100, 140, 240, 1) 16%,
+        rgba(95, 135, 236, 1) 20%,
+        rgba(90, 130, 232, 1) 24%,
+        rgba(85, 125, 228, 1) 28%,
+        rgba(80, 120, 224, 1) 32%,
+        rgba(75, 115, 220, 1) 36%,
+        rgba(70, 110, 216, 1) 40%,
+        rgba(65, 105, 212, 1) 44%,
+        rgba(60, 100, 208, 1) 48%,
+        rgba(55, 95, 204, 1) 52%,
+        rgba(50, 90, 200, 1) 56%,
+        rgba(46, 86, 196, 1) 60%,
+        rgba(42, 82, 192, 1) 64%,
+        rgba(38, 78, 188, 1) 68%,
+        rgba(35, 74, 184, 1) 72%,
+        rgba(32, 70, 180, 1) 76%,
+        rgba(29, 66, 176, 1) 80%,
+        rgba(26, 62, 172, 1) 84%,
+        rgba(24, 58, 168, 1) 88%,
+        rgba(22, 54, 164, 1) 92%,
+        rgba(20, 50, 160, 1) 96%,
+        rgba(18, 46, 156, 1) 100%
+      );
+      border: 5px solid rgba(80, 120, 220, 0.8);
+      box-shadow: 
+        0 0 2px 1px rgba(100, 140, 240, 1),
+        0 0 60px rgba(80, 120, 220, 0.6),
+        0 0 100px rgba(60, 100, 200, 0.4),
+        0 0 140px rgba(40, 80, 180, 0.3),
+        0 15px 70px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 2px rgba(100, 140, 240, 0.5);
+      filter: contrast(1.2) saturate(1.4);
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     .blob:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
+      filter: contrast(1.25) saturate(1.5) brightness(1.1);
+      border-color: rgba(100, 140, 240, 0.9);
     }
 
     .inner-dot {
       position: absolute;
       pointer-events: none;
+      background: radial-gradient(circle at 50% 50%,
+        rgba(140, 180, 255, 1) 0%,
+        rgba(135, 175, 252, 1) 10%,
+        rgba(130, 170, 248, 1) 20%,
+        rgba(125, 165, 244, 1) 30%,
+        rgba(120, 160, 240, 1) 40%,
+        rgba(115, 155, 236, 1) 50%,
+        rgba(110, 150, 232, 0.9) 60%,
+        rgba(105, 145, 228, 0.7) 70%,
+        rgba(100, 140, 224, 0.5) 80%,
+        rgba(95, 135, 220, 0.3) 90%,
+        rgba(90, 130, 216, 0.1) 100%
+      );
+      box-shadow: 
+        0 0 10px rgba(120, 160, 240, 0.6);
+      filter: blur(0px);
     }
 
     svg {
@@ -75,7 +137,7 @@
   </style>
 </head>
 <body>
-  <h1 class="title">Try to Click the Blob!</h1>
+  <h1 class="title">Catch The Blob</h1>
   
   <svg>
     <filter id="blob">
@@ -101,16 +163,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
     const config = {
-      fillColor: '#5227FF',
       trailCount: 3,
       sizes: [60, 125, 75],
       innerSizes: [20, 35, 25],
-      innerColor: 'rgba(255,255,255,0.8)',
-      opacities: [0.6, 0.6, 0.6],
-      shadowColor: 'rgba(82, 39, 255, 0.5)',
-      shadowBlur: 20,
-      shadowOffsetX: 0,
-      shadowOffsetY: 0,
+      opacities: [0.7, 0.7, 0.7],
       dodgeDistance: 200,
       dodgeDuration: 0.15,
       detectionRadius: 120
@@ -132,9 +188,7 @@
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: '50%',
-        backgroundColor: config.fillColor,
         opacity: config.opacities[i],
-        boxShadow: `${config.shadowOffsetX}px ${config.shadowOffsetY}px ${config.shadowBlur}px 0 ${config.shadowColor}`,
         left: `${blobPositions[i].x - size / 2}px`,
         top: `${blobPositions[i].y - size / 2}px`
       });
@@ -144,7 +198,6 @@
         height: `${innerSize}px`,
         top: `${(size - innerSize) / 2}px`,
         left: `${(size - innerSize) / 2}px`,
-        backgroundColor: config.innerColor,
         borderRadius: '50%'
       });
     });
