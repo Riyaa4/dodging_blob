@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch the Blob!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000000;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .title {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      transform: none;
+      color: #5227FF;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(82, 39, 255, 0.5);
+      z-index: 1;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .blob-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .blob-main {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      filter: url(#blob);
+    }
+
+    .blob {
+      position: absolute;
+      pointer-events: all;
+      cursor: pointer;
+      transition: transform 0.15s ease-out;
+    }
+
+    .blob:hover {
+      transform: scale(1.1);
+    }
+
+    .inner-dot {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    svg {
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">Try to Click the Blob!</h1>
+  
+  <svg>
+    <filter id="blob">
+      <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="30" />
+      <feColorMatrix in="blur" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 35 -10" />
+    </filter>
+  </svg>
+
+  <div class="blob-container">
+    <div class="blob-main">
+      <div class="blob" data-index="0">
+        <div class="inner-dot"></div>
+      </div>
+      <div class="blob" data-index="1">
+        <div class="inner-dot"></div>
+      </div>
+      <div class="blob" data-index="2">
+        <div class="inner-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const config = {
+      fillColor: '#5227FF',
+      trailCount: 3,
+      sizes: [60, 125, 75],
+      innerSizes: [20, 35, 25],
+      innerColor: 'rgba(255,255,255,0.8)',
+      opacities: [0.6, 0.6, 0.6],
+      shadowColor: 'rgba(82, 39, 255, 0.5)',
+      shadowBlur: 20,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0,
+      dodgeDistance: 200,
+      dodgeDuration: 0.15,
+      detectionRadius: 120
+    };
+
+    const blobs = document.querySelectorAll('.blob');
+    const blobPositions = [
+      { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+      { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+      { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    ];
+
+    blobs.forEach((blob, i) => {
+      const size = config.sizes[i];
+      const innerSize = config.innerSizes[i];
+      const innerDot = blob.querySelector('.inner-dot');
+
+      Object.assign(blob.style, {
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '50%',
+        backgroundColor: config.fillColor,
+        opacity: config.opacities[i],
+        boxShadow: `${config.shadowOffsetX}px ${config.shadowOffsetY}px ${config.shadowBlur}px 0 ${config.shadowColor}`,
+        left: `${blobPositions[i].x - size / 2}px`,
+        top: `${blobPositions[i].y - size / 2}px`
+      });
+
+      Object.assign(innerDot.style, {
+        width: `${innerSize}px`,
+        height: `${innerSize}px`,
+        top: `${(size - innerSize) / 2}px`,
+        left: `${(size - innerSize) / 2}px`,
+        backgroundColor: config.innerColor,
+        borderRadius: '50%'
+      });
+    });
+
+    function moveBlobs(targetX, targetY) {
+      blobs.forEach((blob, i) => {
+        const isLead = i === 0;
+        gsap.to(blobPositions[i], {
+          x: targetX,
+          y: targetY,
+          duration: isLead ? 0.08 : 0.4,
+          ease: isLead ? 'power4.out' : 'power2.out',
+          onUpdate: () => {
+            const size = config.sizes[i];
+            blob.style.left = `${blobPositions[i].x - size / 2}px`;
+            blob.style.top = `${blobPositions[i].y - size / 2}px`;
+          }
+        });
+      });
+    }
+
+    function dodgeBlobs(mouseX, mouseY) {
+      const leadX = blobPositions[0].x;
+      const leadY = blobPositions[0].y;
+      
+      const dx = leadX - mouseX;
+      const dy = leadY - mouseY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < config.dodgeDistance) {
+        const angle = Math.atan2(dy, dx);
+        let newX = leadX + Math.cos(angle) * config.dodgeDistance;
+        let newY = leadY + Math.sin(angle) * config.dodgeDistance;
+        
+        // Add padding from edges
+        const padding = 150;
+        
+        // If too close to edge, move to center instead
+        if (newX < padding || newX > window.innerWidth - padding || 
+            newY < padding || newY > window.innerHeight - padding) {
+          // Calculate vector toward center
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          const toCenterX = centerX - leadX;
+          const toCenterY = centerY - leadY;
+          const toCenterDist = Math.sqrt(toCenterX * toCenterX + toCenterY * toCenterY);
+          
+          // Move toward center
+          newX = leadX + (toCenterX / toCenterDist) * config.dodgeDistance;
+          newY = leadY + (toCenterY / toCenterDist) * config.dodgeDistance;
+        }
+        
+        // Final bounds check with padding
+        newX = Math.max(padding, Math.min(window.innerWidth - padding, newX));
+        newY = Math.max(padding, Math.min(window.innerHeight - padding, newY));
+        
+        moveBlobs(newX, newY);
+      }
+    }
+
+    blobs.forEach(blob => {
+      blob.addEventListener('mouseenter', (e) => {
+        dodgeBlobs(e.clientX, e.clientY);
+      });
+
+      blob.addEventListener('click', (e) => {
+        e.preventDefault();
+        dodgeBlobs(e.clientX, e.clientY);
+      });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      const leadX = blobPositions[0].x;
+      const leadY = blobPositions[0].y;
+      const dx = leadX - e.clientX;
+      const dy = leadY - e.clientY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < config.detectionRadius) {
+        dodgeBlobs(e.clientX, e.clientY);
+      }
+    });
+
+    moveBlobs(window.innerWidth / 2, window.innerHeight / 2);
+  </script>
+</body>
+</html>
