@@ -83,37 +83,6 @@
       text-transform: uppercase;
     }
 
-    /* ── Score ──────────────────────────────── */
-    .score-board {
-      position: absolute;
-      top: 38px;
-      right: 50px;
-      text-align: right;
-      z-index: 10;
-    }
-
-    .score-label {
-      color: rgba(160, 180, 255, 0.45);
-      font-size: 0.6rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
-
-    .score-value {
-      color: #fff;
-      font-size: 3rem;
-      font-weight: 700;
-      line-height: 1;
-      text-shadow:
-        0 0 10px rgba(255, 220, 160, 0.9),
-        0 0 30px rgba(255, 190, 80, 0.5);
-      transition: transform 0.15s ease, color 0.15s ease;
-    }
-
-    .score-value.bump {
-      transform: scale(1.35);
-      color: #ffd580;
-    }
 
     /* ── Blob body (inside SVG filter) ─────── */
     .blob-container {
@@ -256,10 +225,6 @@
     <p class="subtitle">try to catch me &mdash; if you can</p>
   </div>
 
-  <div class="score-board">
-    <div class="score-label">caught</div>
-    <div class="score-value" id="score">0</div>
-  </div>
 
   <!-- SVG gooey filter — lower blur so the character stays more defined -->
   <svg>
@@ -296,9 +261,7 @@
       detectionRadius: 130
     };
 
-    let score = 0;
-    const scoreEl = document.getElementById('score');
-    const face    = document.getElementById('face');
+    const face = document.getElementById('face');
 
     const blobs = document.querySelectorAll('.blob');
     const blobPositions = [
@@ -340,12 +303,6 @@
       el.addEventListener('animationend', () => el.remove());
     }
 
-    function bumpScore() {
-      score++;
-      scoreEl.textContent = score;
-      scoreEl.classList.add('bump');
-      setTimeout(() => scoreEl.classList.remove('bump'), 200);
-    }
 
     function moveBlobs(targetX, targetY) {
       blobs.forEach((blob, i) => {
@@ -404,12 +361,10 @@
 
       blob.addEventListener('click', (e) => {
         e.preventDefault();
-        // Count a catch if clicking near the lead blob
         const bx = blobPositions[0].x;
         const by = blobPositions[0].y;
         const dist = Math.sqrt((bx - e.clientX) ** 2 + (by - e.clientY) ** 2);
         if (dist < config.sizes[0]) {
-          bumpScore();
           spawnRipple(e.clientX, e.clientY, config.sizes[0]);
         }
         dodgeBlobs(e.clientX, e.clientY);
