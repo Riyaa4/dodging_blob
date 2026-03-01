@@ -18,7 +18,7 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      background: #0d0814;
+      background: #000000;
       font-family: 'Space Mono', 'Courier New', Courier, monospace;
       display: flex;
       align-items: center;
@@ -27,15 +27,15 @@
       cursor: crosshair;
     }
 
-    /* Soft aurora background */
+    /* Subtle blue aurora background */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 55% at 15% 25%, rgba(160, 60, 180, 0.28) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 45% at 85% 75%, rgba(220, 80, 140, 0.22) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(80, 20, 100, 0.35) 0%, transparent 70%);
+        radial-gradient(ellipse 80% 55% at 15% 25%, rgba(40, 60, 180, 0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 45% at 85% 75%, rgba(30, 80, 200, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(10, 20, 80, 0.35) 0%, transparent 70%);
       animation: aurora 12s ease-in-out infinite alternate;
       pointer-events: none;
       z-index: 0;
@@ -43,7 +43,7 @@
 
     @keyframes aurora {
       0%   { filter: hue-rotate(0deg) brightness(1); }
-      50%  { filter: hue-rotate(20deg) brightness(1.12); }
+      50%  { filter: hue-rotate(15deg) brightness(1.1); }
       100% { filter: hue-rotate(-10deg) brightness(0.9); }
     }
 
@@ -52,7 +52,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: radial-gradient(rgba(255, 180, 220, 0.06) 1px, transparent 1px);
+      background-image: radial-gradient(rgba(80, 120, 255, 0.05) 1px, transparent 1px);
       background-size: 30px 30px;
       pointer-events: none;
       z-index: 0;
@@ -67,26 +67,17 @@
     }
 
     .title {
-      color: #fff;
+      color: #ffffff;
       font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: 4px;
       text-transform: uppercase;
-      text-shadow:
-        0 0 8px rgba(255, 160, 210, 1),
-        0 0 25px rgba(240, 100, 180, 0.7),
-        0 0 55px rgba(200, 60, 150, 0.4);
-      animation: titleGlow 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes titleGlow {
-      from { text-shadow: 0 0 8px rgba(255, 160, 210, 1), 0 0 25px rgba(240, 100, 180, 0.7), 0 0 55px rgba(200, 60, 150, 0.4); }
-      to   { text-shadow: 0 0 14px rgba(255, 200, 230, 1), 0 0 45px rgba(255, 130, 200, 0.9), 0 0 80px rgba(220, 80, 170, 0.6); }
+      opacity: 0.85;
     }
 
     .subtitle {
       margin-top: 6px;
-      color: rgba(255, 180, 220, 0.5);
+      color: rgba(160, 180, 255, 0.45);
       font-size: 0.7rem;
       letter-spacing: 3px;
       text-transform: uppercase;
@@ -102,7 +93,7 @@
     }
 
     .score-label {
-      color: rgba(255, 180, 220, 0.45);
+      color: rgba(160, 180, 255, 0.45);
       font-size: 0.6rem;
       letter-spacing: 4px;
       text-transform: uppercase;
@@ -145,19 +136,19 @@
       pointer-events: all;
       cursor: crosshair;
       border-radius: 50%;
-      /* Pink/rose gradient — same hue for all three so they merge as one creature */
+      /* Original blue gradient */
       background: radial-gradient(circle at 38% 32%,
-        rgba(255, 210, 235, 1) 0%,
-        rgba(255, 160, 210, 1) 25%,
-        rgba(240, 100, 175, 1) 55%,
-        rgba(200, 50, 130, 1) 80%,
-        rgba(150, 20, 100, 1) 100%
+        rgba(160, 200, 255, 1) 0%,
+        rgba(100, 150, 255, 1) 25%,
+        rgba(60,  100, 230, 1) 55%,
+        rgba(25,   60, 190, 1) 80%,
+        rgba(10,   30, 140, 1) 100%
       );
       box-shadow:
-        0 0 3px 2px rgba(255, 160, 210, 0.8),
-        0 0 35px rgba(240, 100, 175, 0.6),
-        0 0 70px rgba(200, 60, 150, 0.35),
-        inset 0 0 0 2px rgba(255, 200, 230, 0.3);
+        0 0 3px 2px rgba(120, 170, 255, 0.8),
+        0 0 35px rgba(80,  130, 240, 0.6),
+        0 0 70px rgba(50,   90, 210, 0.35),
+        inset 0 0 0 2px rgba(140, 180, 255, 0.3);
     }
 
     /* Breathing animation — each blob at a different pace */
@@ -182,7 +173,7 @@
       position: absolute;
       width: 9px;
       height: 9px;
-      background: #2d0d30;
+      background: #0a1a4a;
       border-radius: 50%;
       top: 34%;
     }
@@ -229,7 +220,7 @@
       position: absolute;
       width: 7px;
       height: 5px;
-      border: 1.5px solid rgba(70, 15, 50, 0.75);
+      border: 1.5px solid rgba(10, 30, 90, 0.75);
       border-top: none;
       border-radius: 0 0 5px 5px;
     }
